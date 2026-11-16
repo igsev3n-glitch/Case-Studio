@@ -1,6 +1,7 @@
 /* Editable catalogue. Product type, price, availability, description and compatibility stay unconfirmed until supplied. */
 window.CASE_CATALOG = {
   brand: { name: 'CASE STUDIO', announcement: '', email: '', supportEmail: '', instagram: '', currency: 'INR', enquiryMode: true },
+  homepage: { heroProductId: 'design-030', promoLeftProductId: 'design-005', promoRightProductId: 'design-013' },
   products: [
     {"id": "design-001", "name": "Design 001", "image": "IMG-20260911-WA0007.jpg", "images": [], "collection": "Soft Aesthetic", "category": "Phone case", "productType": null, "availability": "unknown", "colors": ["pink", "cream"], "tags": ["soft tones"], "description": "", "price": null, "compareAtPrice": null, "featured": true, "isNew": false, "active": true, "compatibility": [], "slug": "design-001", "sourceFilename": "IMG-20260911-WA0007.jpg"},
     {"id": "design-002", "name": "Design 002", "image": "IMG-20260911-WA0008.jpg", "images": [], "collection": "Blue Notes", "category": "Phone case", "productType": null, "availability": "unknown", "colors": ["blue"], "tags": ["blue"], "description": "", "price": null, "compareAtPrice": null, "featured": true, "isNew": false, "active": true, "compatibility": [], "slug": "design-002", "sourceFilename": "IMG-20260911-WA0008.jpg"},

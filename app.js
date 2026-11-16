@@ -22,20 +22,27 @@
   function home(){
     const featured=allProducts.filter(p=>p.featured).slice(0,3);
     const launches=allProducts.filter(p=>p.isNew).slice(0,3);
-    const launchProducts=launches.slice(0,3);
-    const heroProduct=allProducts[29]||allProducts[0], promoLeft=allProducts[4]||allProducts[0], promoRight=allProducts[12]||allProducts[1];
+    const homepage=config.homepage||{};
+    const configuredProduct=id=>allProducts.find(p=>p.id===id);
+    const heroProduct=configuredProduct(homepage.heroProductId)||featured[0]||allProducts[0];
+    const promoLeft=configuredProduct(homepage.promoLeftProductId)||allProducts.find(p=>p.id!==heroProduct?.id)||heroProduct;
+    const promoRight=configuredProduct(homepage.promoRightProductId)||allProducts.find(p=>![heroProduct?.id,promoLeft?.id].includes(p.id))||heroProduct;
     const image=p=>esc(p?.image||'image-fallback.svg');
+    const launchesCta=launches.length?'<a class="underlined-link" href="#new-launches" data-scroll-target="new-launches">Explore New Launches</a>':'<a class="underlined-link" href="#/shop?new=1">Explore New Launches</a>';
+    const launchSection=launches.length?`<section class="section new-section" id="new-launches">${sectionHeading('FRESH FROM THE STUDIO','New Launches','#/shop?new=1','Shop all new')}<div class="product-grid home-product-grid launch-grid">${launches.map(card).join('')}</div></section>`:'';
+    const bestSellerSection=featured.length?`<section class="section featured-section" id="best-sellers">${sectionHeading('THE MOST LOVED','Best sellers','#/shop?best=1','Shop all favourites')}<div class="product-grid home-product-grid">${featured.map(card).join('')}</div></section>`:'';
     return `<main>
-      <section class="hero redesigned-hero"><div class="hero-copy"><p class="eyebrow"><span class="eyebrow-dot"></span> Your everyday, reimagined</p><h1>Wear your<br><em>point of view.</em></h1><p class="hero-description">A good case is more than protection. It’s the little detail that makes your everyday feel a little more like you.</p><div class="hero-actions"><a class="button button-dark" href="#/shop">Shop All <span>↗</span></a><a class="underlined-link" href="#new-launches" data-scroll-target="new-launches">Explore New Launches</a></div><div class="hero-footnote"><span>DESIGNED FOR EVERY DAY</span><span>MADE TO FEEL LIKE YOU</span></div></div><div class="hero-art redesigned-hero-art"><img src="${image(heroProduct)}" alt="A featured Case Studio phone case" fetchpriority="high" onerror="this.onerror=null;this.src='image-fallback.svg'"><span class="hero-art-caption">YOUR CASE. YOUR CALL.</span></div></section>
+      <section class="hero redesigned-hero"><div class="hero-copy"><h1>Wear your<br><em>point of view.</em></h1><p class="hero-description">A good case is more than protection. It’s the little detail that makes your everyday feel a little more like you.</p><div class="hero-actions"><a class="button button-dark" href="#/shop">Shop All <span>↗</span></a>${launchesCta}</div></div><div class="hero-art redesigned-hero-art"><img src="${image(heroProduct)}" alt="A featured Case Studio phone case" fetchpriority="high" onerror="this.onerror=null;this.src='image-fallback.svg'"><span class="hero-art-caption">YOUR CASE. YOUR CALL.</span></div></section>
       <section class="promo-banner" aria-label="Case Studio collection"><img class="promo-image promo-image-left" src="${image(promoLeft)}" alt="Phone case from the collection" loading="lazy" onerror="this.onerror=null;this.src='image-fallback.svg'"><div class="promo-copy"><p class="eyebrow">THE CASE STUDIO EDIT</p><h2>A Little Upgrade<br><em>Goes a Long Way.</em></h2><p>Give your everyday essentials a fresh new look. Discover designs that make your phone stand out.</p><a class="button button-dark" href="#/shop">Shop Now <span>↗</span></a></div><img class="promo-image promo-image-right" src="${image(promoRight)}" alt="Another phone case from the collection" loading="lazy" onerror="this.onerror=null;this.src='image-fallback.svg'"></section>
-      <section class="section new-section" id="new-launches">${sectionHeading('FRESH FROM THE STUDIO' ,'New Launches','#/shop?new=1','Shop all new')}<p class="launch-description">Fresh designs. New favourites. Explore what’s new at CASE STUDIO.</p><div class="product-grid home-product-grid launch-grid">${launchProducts.map(card).join('')}</div></section>
-      <section class="section featured-section" id="best-sellers">${sectionHeading('THE MOST LOVED','Best sellers','#/shop?best=1','Shop all favourites')}<div class="product-grid home-product-grid">${featured.map(card).join('')}</div></section>
+      ${launchSection}
+      ${bestSellerSection}
       <section class="home-collections"><div><p class="eyebrow">FIND YOUR FEELING</p><h2>A case for<br><em>every side of you.</em></h2><a class="text-link" href="#/collections">Explore all collections ↗</a></div><div class="home-collection-links">${collections.slice(0,4).map((c,i)=>{const p=allProducts.find(x=>x.collection===c);return `<a class="home-collection-card" href="#/collection/${encodeURIComponent(c)}"><img src="${image(p)}" alt="${esc(c)} case collection" loading="lazy" onerror="this.onerror=null;this.src='image-fallback.svg'"><span>0${i+1}</span><b>${esc(c)} ↗</b></a>`}).join('')}</div></section>
     </main>`;
   }
   function productListPage(opts={}){
     let items=allProducts.slice();
     if(opts.collection)items=items.filter(p=>p.collection===opts.collection);
+    if(state.collection)items=items.filter(p=>p.collection===state.collection);
     if(opts.category)items=items.filter(p=>p.productType===opts.category);
     if(opts.bestOnly)items=items.filter(p=>p.featured===true);
     if(state.q)items=items.filter(p=>([p.name,...(p.tags||[]),p.collection,...(p.colors||[]),p.productType].filter(Boolean).join(' ')).toLowerCase().includes(state.q.toLowerCase()));
