@@ -30,6 +30,16 @@
 .new-section{padding-bottom:25px}.featured-section{padding-top:35px}
 .launch-description{max-width:var(--max);padding:0 clamp(20px,5vw,72px);margin:-10px auto 28px;color:var(--muted);font-size:12px;line-height:1.8}
 .footer-unavailable{font-size:11px;color:#817a72}
+.detail-type,.detail-availability{font-size:11px;color:var(--muted);margin:8px 0}
+.policy-intro{font-size:13px;line-height:1.8;color:var(--muted)}
+.policy-sections{margin:30px 0 38px;border-top:1px solid var(--line)}
+.policy-sections section{padding:20px 0;border-bottom:1px solid var(--line)}
+.policy-sections h2{font:20px var(--serif);font-weight:500;margin:0 0 8px}
+.policy-sections p{font-size:12px;line-height:1.8;color:var(--muted);margin:0}
+.field-error{font-size:10px;line-height:1.5;color:#8b2634;min-height:0;margin:-12px 0 14px}
+.field-error:empty{display:none}
+.coming-soon .eyebrow{margin-bottom:12px}
+.coming-soon .button{margin-top:8px}
 .home-collections{max-width:var(--max);margin:25px auto 0;padding:65px clamp(20px,5vw,72px) 90px;display:grid;grid-template-columns:.7fr 1.5fr;gap:50px;align-items:center;background:#f0ece5}
 .home-collections>div:first-child h2{font-size:clamp(32px,4vw,51px);line-height:1.08;font-weight:500;letter-spacing:-.05em;margin:15px 0 24px}
 .home-collection-links{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}

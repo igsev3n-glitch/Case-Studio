@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://casestudio1234.vercel.app/sitemap.xml

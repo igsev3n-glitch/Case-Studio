@@ -1,80 +1,80 @@
 # CASE STUDIO — phone case catalogue
 
-A responsive, image-first catalogue website built with plain HTML, CSS and JavaScript. It has no build step or third-party JavaScript dependencies, so it can be previewed locally or hosted as a static site. The uploaded case photos are preserved in `assets/images/` and are used as the product imagery.
+A responsive catalogue storefront built with plain HTML, CSS and JavaScript. It has no build step or third-party JavaScript dependencies.
 
 ## Run locally
 
-1. Unzip the project.
-2. Open a terminal in the `case-studio` folder.
-3. Run a local static server, for example:
-
-   ```bash
-   python -m http.server 8000
-   ```
-
-4. Open `http://localhost:8000`.
-
-Hash-based routes (`#/shop`, `#/collections`, `#/product/design-001`) work on static hosting without server-side route rewrites.
-
-## What works
-
-- Responsive homepage, catalogue, collection directory, collection-filtered pages, product details, about, enquiry, and policy placeholder pages.
-- Catalogue search by name, tags, collection and colour metadata.
-- Collection and colour filters, sort by featured/new/name, optional price sorting when prices exist, clear filters, and load-more pagination.
-- Search overlay with matching product suggestions.
-- Mobile navigation and mobile filter drawer.
-- Product enquiry CTA; when an owner email is configured it prepares an email using `mailto:`. The visitor must send it in their email app.
-- Accessible labels, visible focus states, reduced-motion support, lazy-loaded below-the-fold images, and missing-image fallback.
-- No invented prices, reviews, stock claims, phone compatibility, shipping promises or discounts.
-
-## Add and manage products
-
-1. Copy the original image into `assets/images/` (keep the source image unchanged).
-2. Open `catalog.js` and duplicate a product object in `products`.
-3. Give it a unique `id` and `slug`, update `name`, `image`, `collection`, `colors`, `tags`, and any known `description` or `price`.
-4. Keep unknown prices as `null`. Do not populate `compatibility` unless the supported brand/model combinations are confirmed. Set `active: false` to hide a design.
-5. Set `featured: true` or `isNew: true` for the homepage selections.
-
-The initial photo filenames are generic WhatsApp filenames, so products are labelled `Design 001`, etc. Collection and broad visual tags are editable starter classifications based on the supplied contact sheet; review them before launch. `sourceFilename` preserves the original filename for easy matching.
-
-To scan the image folder and create a fresh, unclassified starter catalogue, run:
+Run a static server from the project root, then open its local URL:
 
 ```bash
-node scripts/scan-images.mjs
+python -m http.server 8000
 ```
 
-**Warning:** this replaces `catalog.js` with fresh starter entries. Back up the current file first if you have edited product data. It does not alter or resize original photos.
+The app uses hash routes such as `#/shop`, `#/collections`, and `#/product/design-001`, so it works on static hosting without server-side route rewrites.
+
+## Project files
+
+- `index.html` — page shell, SEO metadata and font/style references.
+- `styles.css` — responsive storefront styles.
+- `app.js` — hash router, catalogue, product details, enquiry and policy views.
+- `catalog.js` — editable brand settings and product records.
+- `IMG-*.jpg` — 39 original product photos stored in the project root.
+- `image-fallback.svg` — local image fallback.
+- `scan-images.mjs` — optional safe catalogue starter generator.
+
+Product image paths are root-relative filenames (for example `IMG-20260911-WA0007.jpg`), not `assets/images/...`.
+
+## Catalogue data
+
+The 39 existing products and original photographs are retained. Each product supports:
+
+- `name`, `image`, and optional `images`.
+- `productType`: `Silicone Case`, `Glass Case`, `Phone Charms / Chains`, or `null` until confirmed.
+- `collection`, `colors`, `tags`, and optional `description`.
+- `price` and `compareAtPrice` (leave as `null` until supplied).
+- `featured`, `isNew`, and `active`.
+- `availability`: `available`, `unavailable`, `preorder`, or `unknown`.
+- `compatibility`: confirmed `{ brand, model }` entries only.
+
+No existing product has a confirmed silicone, glass, or charm type, so those navigation pages show a Coming Soon state. Do not classify a product based only on its photograph or collection name. Best Sellers uses `featured: true`; New Launches uses `isNew: true`.
+
+To edit the catalogue, update the corresponding product object in `catalog.js`. Keep `id` and `slug` unique. Do not add unsupported prices, product claims, stock status, descriptions, or phone compatibility.
+
+### Image scanner
+
+The scanner first reports what it found and makes no changes. It replaces the catalogue only when explicitly run with:
+
+```bash
+node scan-images.mjs --write
+```
+
+Back up `catalog.js` before using `--write`; generated entries are unclassified and replace the current catalogue metadata.
 
 ## Brand settings
 
-At the top of `catalog.js`, change:
+In `catalog.js`, set:
 
-- `brand.name` — the global wordmark.
-- `brand.announcement` — leave empty to hide the announcement bar.
-- `brand.email` — set a real customer enquiry email to enable email draft links.
-- `brand.instagram` — set the real profile URL to show the Instagram link.
-- `brand.currency` — use a supported ISO currency code if you add prices.
+- `brand.email` or `brand.supportEmail` to the real customer support email.
+- `brand.instagram` to the official Instagram URL, if one exists.
+- `brand.currency` to the chosen ISO currency code if prices are added.
+- `brand.name` and `brand.announcement` as needed.
 
-## Before launch
+The Instagram footer item remains a non-link placeholder until an official URL is configured.
 
-- Supply final brand name/logo, product names, prices, descriptions, accurate compatibility, contact email and Instagram URL.
-- Replace policy placeholder copy with the real privacy, terms, shipping and returns policies.
-- The enquiry form uses `mailto:` only; no message is transmitted or stored by this website. For reliable enquiries, connect a backend/form provider and configure spam protection.
-- Checkout, cart, inventory, customer accounts, payment processing, order tracking and persistent admin management are not implemented. Do not accept payments through this demo. A real store will need an ecommerce backend/payment provider and server-side configuration.
-- Google Fonts are loaded remotely; the rest of the site is static. For fully offline hosting, bundle the fonts locally or remove the font import.
+## Enquiries and commerce
 
-## Project structure
+The enquiry form has client-side required-field and email validation. It does not store or submit messages to a backend. When a support email is configured, it opens an email draft; the customer must send it in their email app. Without an email, the page explains that the enquiry was not submitted. Product compatibility options only show confirmed models from `compatibility`.
 
-```text
-case-studio/
-├── index.html
-├── styles.css
-├── app.js
-├── catalog.js
-├── README.md
-├── scripts/
-│   └── scan-images.mjs
-└── assets/
-    ├── image-fallback.svg
-    └── images/             # 39 supplied original product photos
-```
+There is no checkout, cart, inventory system, payment processing, customer account, order tracking, or admin interface. Do not accept payments through this static catalogue. Reliable enquiries or a full store require a secure backend or commerce provider and server-side spam protection.
+
+## Policies
+
+Privacy, refund, and shipping pages are structured owner-editable templates. Bracketed notes are placeholders, not final policy terms or legal review. Replace them with accurate business information and obtain appropriate review before publishing.
+
+## SEO and deployment
+
+The Vercel project is connected to the GitHub repository with `main` as the production branch. The configured production URL is `https://casestudio1234.vercel.app/`; no custom domain has been supplied. The project currently has Vercel SSO protection enabled for Vercel-hosted domains. Preview deployments return `X-Robots-Tag: noindex`; this preview-only protection header is intentionally not overridden in the app.
+
+The sitemap lists the canonical homepage only because the catalogue's internal views use hash-based routes; URL fragments are not distinct crawlable pages. Remove or change SSO protection only as an explicit production access decision. A protected site is not publicly accessible to search crawlers even if its HTML contains canonical and sitemap metadata.
+
+Google Fonts load remotely; the rest of the site is static. For offline hosting, bundle the fonts locally or remove the remote font reference.
